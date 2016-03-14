@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="app.css">
+  <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  <script>
+    var app = angular.module('myApp', []);
+    app.controller('customersCtrl',function($scope){
+      $scope.names =[
+                      { Name: "Ajinath Jedhe" , Country: " India"},
+                      { Name: "Amardeep Jadhav" , Country: " India"},
+                      { Name: "Sandip Wavhal" , Country: " India"},
+                      { Name: "Mayur Khatri" , Country: " India"},
+                    ];
+
+    $scope.addUpdateRow = function(op,name){
+      if (op ==1 )
+      {
+        $scope.names.push({
+          'Name':$scope.Name,
+          'Country':$scope.Country
+        });
+        $scope.Name="";
+        $scope.Country=""
+      }
+      else {
+        var index= -1;
+        var records= eval($scope.names);
+        for (var i=0 ; i<records.length ; i++ )
+        {
+          if (records[i].Name == name){
+            records[i].Name= $scope.Name;
+            records[i].Country= $scope.Country;
+          }
+        }
+      }
+    };
+    $scope.removeRow = function(Name){
+      var index= -1;
+      var records= eval($scope.names);
+      for (var i=0 ; i<records.length ; i++ )
+      {
+        if (records[i].Name == Name)
+        {
+          index = i;
+          break;
+        }
+      }
+      if( index == -1 )
+      {
+        alert("Something went wrong");
+      }
+    $scope.names.splice(index,1) // Delete Records
+
+    };
+    $scope.editRow = function(Name){
+      var index= -1;
+      var records= eval($scope.names);
+      for (var i=0 ; i<records.length ; i++ )
+      {
+        if (records[i].Name == Name)
+        {
+          index = i;
+          $scope.Name=records[i].Name;
+          $scope.Country=records[i].Country;
+          break;
+        }
+      }
+      if( index == -1 )
+        {
+          alert("Something went wrong");
+        }
+        $scope.op=2;
+        $scope.key=Name;
+      };
+    });
+  </script>
+<body>
+  <div ng-app="myApp" ng-controller="customersCtrl" ng-init="op=1;key='nothing'">
+    <input type="hidden" ng-model="op"/>
+    <input type="hidden" ng-model="key"/>
+    <h1 class="text-center text-info bold"> User Details </h1>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Country</th>
+          <th>Remove</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="x in names">
+          <td>{{ x.Name }}</td>
+          <td>{{ x.Country }}</td>
+          <td>
+            <input type="button" value="Remove" class="btn btn-danger" ng-click="removeRow(x.Name)"/>
+          </td>
+          <td>
+            <input type="button" value="Edit" class="btn btn-primary" ng-click="editRow(x.Name)"/>
+          </td>
+        </tr>
+      <tbody>
+    </table>
+    <div class = "text-center">
+      <form name = "myForm" ng-submit="addUpdateRow(op,key)">
+          <!-- <div class="col-md-2"></div> -->
+          <div class="col-md-4">
+            Name :<input type="text" name="Name" ng-model="Name" required /> <br>
+            <span ng-show="myForm.Name.$touched && myForm.Name.$invalid">The name is required.</span>
+          </div>
+          <div class="col-md-4">
+            Country :<input type="text" name="Country" ng-model="Country" required /> <br>
+            <span ng-show="myForm.Country.$touched && myForm.Country.$invalid">The Country is required.</span>
+          </div>
+          <div class="col-md-3">
+            <input type="submit" value="Submit" class="btn btn-primary"/>
+          </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
